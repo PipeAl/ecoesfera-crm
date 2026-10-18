@@ -1,0 +1,425 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos | Ecoesfera CRM</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7f4;
+            color: #26352b;
+        }
+
+        header {
+            background: #247a43;
+            color: white;
+            padding: 22px 30px;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+        }
+
+        nav {
+            margin-top: 15px;
+        }
+
+        nav a {
+            color: white;
+            margin-right: 20px;
+            text-decoration: none;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .seccion {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px #00000012;
+        }
+
+        .formulario {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .campo.completo {
+            grid-column: 1 / -1;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #cbd5cc;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        button {
+            background: #247a43;
+            color: white;
+            border: none;
+            padding: 11px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #195d32;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .productos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px;
+        }
+
+        .tarjeta {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 12px #00000012;
+            overflow-wrap: anywhere;
+        }
+
+        .tarjeta h3 {
+            color: #247a43;
+            margin-top: 0;
+        }
+
+        .precio {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .estado {
+            color: #247a43;
+            font-weight: bold;
+        }
+
+        .mensaje {
+            padding: 14px;
+            border-radius: 8px;
+            background: #edf4ee;
+            margin-bottom: 18px;
+        }
+
+        .error {
+            color: #a32121;
+            background: #ffeded;
+        }
+
+        .exito {
+            color: #195d32;
+            background: #e5f5e8;
+        }
+
+        .acciones {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Ecoesfera</h1>
+        <p>Gestión de productos naturales</p>
+
+        <nav>
+            <a href="/index.html">Panel principal</a>
+            <a href="/productos.html">Productos</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="seccion">
+            <h2>Registrar producto</h2>
+            <p>Completa los datos para agregar un producto al catálogo.</p>
+
+            <div id="mensajeFormulario" class="mensaje" hidden></div>
+
+            <form id="formularioProducto">
+                <div class="formulario">
+                    <div class="campo">
+                        <label for="nombre">Nombre del producto *</label>
+                        <input id="nombre" name="nombre"
+                               maxlength="150" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="imagen">Nombre del archivo de imagen</label>
+                        <input id="imagen" name="imagen"
+                               placeholder="omega3.jpg">
+                    </div>
+
+                    <div class="campo completo">
+                        <label for="descripcion">Descripción</label>
+                        <textarea id="descripcion" name="descripcion"
+                                  maxlength="1000"></textarea>
+                    </div>
+
+                    <div class="campo">
+                        <label for="precioVenta">Precio de venta *</label>
+                        <input id="precioVenta" name="precioVenta"
+                               type="number" min="0.01" step="0.01" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="stock">Existencias *</label>
+                        <input id="stock" name="stock"
+                               type="number" min="0" step="1" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="stockMinimo">Stock mínimo *</label>
+                        <input id="stockMinimo" name="stockMinimo"
+                               type="number" min="0" step="1"
+                               value="5" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="idCategoria">ID de categoría *</label>
+                        <input id="idCategoria" name="idCategoria"
+                               type="number" min="1" step="1" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="idProveedor">ID de proveedor *</label>
+                        <input id="idProveedor" name="idProveedor"
+                               type="number" min="1" step="1" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="estado">Estado *</label>
+                        <select id="estado" name="estado" required>
+                            <option value="true">Activo</option>
+                            <option value="false">Inactivo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="acciones">
+                    <button id="botonGuardar" type="submit">
+                        Guardar producto
+                    </button>
+
+                    <button type="reset">
+                        Limpiar formulario
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section class="seccion">
+            <div>
+                <h2>Catálogo de productos</h2>
+                <p>Consulta los productos registrados en el sistema.</p>
+                <button type="button" onclick="cargarProductos()">
+                    Actualizar catálogo
+                </button>
+            </div>
+
+            <p id="mensajeCatalogo" class="mensaje">
+                Cargando productos...
+            </p>
+
+            <section id="listaProductos" class="productos"></section>
+        </section>
+    </main>
+
+    <script>
+        const formulario = document.getElementById("formularioProducto");
+        const mensajeFormulario =
+            document.getElementById("mensajeFormulario");
+        const botonGuardar = document.getElementById("botonGuardar");
+
+        function mostrarMensaje(texto, tipo) {
+            mensajeFormulario.textContent = texto;
+            mensajeFormulario.className = "mensaje " + tipo;
+            mensajeFormulario.hidden = false;
+        }
+
+        formulario.addEventListener("submit", async function(evento) {
+            evento.preventDefault();
+
+            const datos = {
+                nombre: document.getElementById("nombre").value.trim(),
+                descripcion:
+                    document.getElementById("descripcion").value.trim(),
+                imagen: document.getElementById("imagen").value.trim(),
+                precioVenta:
+                    Number(document.getElementById("precioVenta").value),
+                stock: Number(document.getElementById("stock").value),
+                stockMinimo:
+                    Number(document.getElementById("stockMinimo").value),
+                estado:
+                    document.getElementById("estado").value === "true",
+                idCategoria:
+                    Number(document.getElementById("idCategoria").value),
+                idProveedor:
+                    Number(document.getElementById("idProveedor").value)
+            };
+
+            if (!datos.nombre || datos.precioVenta <= 0 ||
+                datos.stock < 0 || datos.stockMinimo < 0 ||
+                !Number.isInteger(datos.stock) ||
+                !Number.isInteger(datos.stockMinimo) ||
+                !Number.isInteger(datos.idCategoria) ||
+                !Number.isInteger(datos.idProveedor) ||
+                datos.idCategoria < 1 || datos.idProveedor < 1) {
+                mostrarMensaje(
+                    "Revisa los datos ingresados. Verifica precio, existencias, categoría y proveedor.",
+                    "error"
+                );
+                return;
+            }
+
+            botonGuardar.disabled = true;
+            botonGuardar.textContent = "Guardando...";
+
+            try {
+                const respuesta = await fetch("/api/productos", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(datos)
+                });
+
+                if (!respuesta.ok) {
+                    const detalle = await respuesta.text();
+                    console.error("Respuesta de la API:", detalle);
+                    throw new Error(
+                        "El servidor rechazó el producto (HTTP " +
+                        respuesta.status + "). Comprueba los IDs de categoría y proveedor."
+                    );
+                }
+
+                mostrarMensaje(
+                    "¡Producto registrado correctamente!",
+                    "exito"
+                );
+
+                formulario.reset();
+                document.getElementById("stockMinimo").value = 5;
+
+                await cargarProductos();
+
+            } catch (error) {
+                mostrarMensaje(
+                    error.message ||
+                    "No se pudo registrar el producto. Comprueba que Spring Boot esté activo.",
+                    "error"
+                );
+                console.error(error);
+            } finally {
+                botonGuardar.disabled = false;
+                botonGuardar.textContent = "Guardar producto";
+            }
+        });
+
+        async function cargarProductos() {
+            const mensaje = document.getElementById("mensajeCatalogo");
+            const lista = document.getElementById("listaProductos");
+
+            mensaje.textContent = "Cargando productos...";
+            mensaje.className = "mensaje";
+            lista.replaceChildren();
+
+            try {
+                const respuesta = await fetch("/api/productos");
+
+                if (!respuesta.ok) {
+                    throw new Error("No se pudieron consultar los productos.");
+                }
+
+                const productos = await respuesta.json();
+
+                if (productos.length === 0) {
+                    mensaje.textContent =
+                        "Todavía no hay productos registrados.";
+                    return;
+                }
+
+                mensaje.textContent =
+                    "Productos registrados: " + productos.length;
+
+                productos.forEach(producto => {
+                    const tarjeta = document.createElement("article");
+                    tarjeta.className = "tarjeta";
+
+                    const nombre = document.createElement("h3");
+                    nombre.textContent = producto.nombre;
+
+                    const descripcion = document.createElement("p");
+                    descripcion.textContent =
+                        producto.descripcion || "Sin descripción";
+
+                    const precio = document.createElement("p");
+                    precio.className = "precio";
+                    precio.textContent = "$" +
+                        Number(producto.precioVenta).toLocaleString("es-CO");
+
+                    const stock = document.createElement("p");
+                    stock.textContent = "Existencias: " + producto.stock;
+
+                    const estado = document.createElement("p");
+                    estado.className = "estado";
+                    estado.textContent = producto.estado
+                        ? "Activo"
+                        : "Inactivo";
+
+                    tarjeta.append(
+                        nombre, descripcion, precio, stock, estado
+                    );
+
+                    lista.appendChild(tarjeta);
+                });
+
+            } catch (error) {
+                mensaje.textContent =
+                    "No fue posible cargar los productos. Comprueba que Spring Boot esté ejecutándose.";
+                mensaje.className = "mensaje error";
+                console.error(error);
+            }
+        }
+
+        cargarProductos();
+    </script>
+</body>
+</html>
