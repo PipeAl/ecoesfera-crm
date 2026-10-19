@@ -152,6 +152,14 @@
             flex-wrap: wrap;
             margin-top: 18px;
         }
+        .imagen-producto {
+            width: 100%;
+            height: 180px;
+            object-fit: contain;
+            background-color: #ffffff;
+            border-radius: 8px;
+            margin-bottom: 12px;
+}
     </style>
 </head>
 
@@ -383,6 +391,19 @@
                     const tarjeta = document.createElement("article");
                     tarjeta.className = "tarjeta";
 
+                    const imagen = document.createElement("img");
+
+                    imagen.src = producto.imagen
+                    ? "/img/" + producto.imagen
+                 : "/img/omega3.jpg";
+
+                imagen.alt = producto.nombre;
+                imagen.className = "imagen-producto";
+
+                    imagen.onerror = function () {
+                  this.style.display = "none";
+                };
+
                     const nombre = document.createElement("h3");
                     nombre.textContent = producto.nombre;
 
@@ -404,8 +425,8 @@
                         ? "Activo"
                         : "Inactivo";
 
-                    tarjeta.append(
-                        nombre, descripcion, precio, stock, estado
+                   tarjeta.append(
+                     imagen, nombre, descripcion, precio, stock, estado
                     );
 
                     lista.appendChild(tarjeta);
