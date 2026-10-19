@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,50 +7,54 @@
 
     <title>Ecoesfera CRM | Inicio</title>
 
-    <!--Hoja de estilos del proyecto-->
+    <!-- Hoja de estilos del proyecto -->
     <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
-    
+
     <div class="contenedor">
 
-        <!--Menú lateral de navegación-->
+        <!-- Menú lateral de navegación -->
         <aside class="menu-lateral">
 
             <div class="logo">Ecoesfera</div>
             <p class="subtitulo-logo">Gestión de productos naturales</p>
-        
+
             <h3>Principal</h3>
-            <a href="/" class="activo">⌂ Inicio</a><br/>
-            <a href="/productos.html">▣ Productos</a><br/>
-            <a href="/categorias.html">▤ Categorías</a><br/>
+            <a href="/index.html" class="activo">⌂ Inicio</a><br>
+            <a href="/productos.html">▣ Productos</a><br>
+            <a href="/categorias.html">▤ Categorías</a><br>
 
             <h3>Sistema</h3>
-            <a href="/usuarios.html">👤 Usuarios</a><br/>
+            <a href="/usuarios.html">👤 Usuarios</a><br>
 
         </aside>
 
-        <!--Área principal del sistema -->
+        <!-- Área principal del sistema -->
         <main class="contenido">
 
             <header class="encabezado">
                 <h1>Panel de control</h1>
-                <p>Sistema de gestión comercial Ecoesfera </p>
+                <p>Sistema de gestión comercial Ecoesfera</p>
             </header>
 
             <section class="panel">
 
-                <div class="bienbenida">
+                <!-- Bienvenida -->
+                <div class="bienvenida">
                     <h2>¡Bienvenido a Ecoesfera CRM!</h2>
-                    <P>Administra tus productos naturales desde un solo lugar</P>
+                    <p>
+                        Administra tus productos naturales
+                        desde un solo lugar.
+                    </p>
                 </div>
 
-                <!-- Resumen inicial del negocio -->
-                 <div class="tarjetas">
+                <!-- Resumen del negocio -->
+                <div class="tarjetas">
 
                     <article class="tarjeta">
                         <p>Productos registrados</p>
-                        <h3>Por consultar</h3>
+                        <h3 id="totalProductos">Consultando...</h3>
                     </article>
 
                     <article class="tarjeta">
@@ -57,26 +62,67 @@
                         <h3>Por consultar</h3>
                     </article>
 
-                    <section class="seccion">
-                        <h2>Comieza a trabajar</h2>
-                        <p>
-                            Desde el menú lateral podrás acceder a los módulos
-                            de productos, categorías, clientes, invetario y ventas.
-                        </p>
-                        <p>
-                            Los indicadores se conectarán a la base de datos
-                            cuando implementemos las consultas del backend.
-                        </p>
+                </div>
 
-                    </section>
+                <!-- Accesos e información -->
+                <section class="seccion">
+                    <h2>Comienza a trabajar</h2>
+
+                    <p>
+                        Desde el menú lateral podrás acceder a los
+                        módulos de productos, categorías, usuarios,
+                        inventario y ventas.
+                    </p>
+
+                    <p>
+                        El total de productos se consulta
+                        automáticamente desde la API del sistema.
+                    </p>
                 </section>
 
-                <footer class="pie">
-                    Ecoesfera CRM · Proyecto formativo SENA
-                </footer>
-                
+            </section>
+
+            <footer class="pie">
+                Ecoesfera CRM · Proyecto formativo SENA
+            </footer>
+
         </main>
-     
+
     </div>
+
+    <!-- Consulta del total de productos mediante la API REST -->
+    <script>
+        async function cargarTotalProductos() {
+            const indicador =
+                document.getElementById("totalProductos");
+
+            try {
+                const respuesta = await fetch("/api/productos");
+
+                if (!respuesta.ok) {
+                    throw new Error("No se pudo consultar la API");
+                }
+
+                const productos = await respuesta.json();
+
+                if (!Array.isArray(productos)) {
+                    throw new Error("La respuesta no es una lista");
+                }
+
+                indicador.textContent = productos.length;
+
+            } catch (error) {
+                indicador.textContent = "No disponible";
+                console.error(
+                    "Error al consultar los productos:",
+                    error
+                );
+            }
+        }
+
+        // Consultar el total al abrir el panel principal.
+        cargarTotalProductos();
+    </script>
+
 </body>
 </html>
