@@ -27,11 +27,13 @@ public List<Producto> listarPorductos() {
 @GetMapping("/{id}")
 public ResponseEntity<Producto> buscarProducto(@PathVariable Integer id) {
     Producto producto = productoServicio.buscarProducto(id);
-    if (producto != null) {
+
+    if (producto == null) {
         return ResponseEntity.notFound().build();
     }
-        return ResponseEntity.ok(producto);
-    }
+
+    return ResponseEntity.ok(producto);
+}
 
 @PostMapping 
 public ResponseEntity<Producto> crearProducto(@RequestBody Producto producto) {
