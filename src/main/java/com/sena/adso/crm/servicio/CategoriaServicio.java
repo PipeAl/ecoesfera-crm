@@ -16,12 +16,13 @@ public class CategoriaServicio {
     }
 
     public List<Categoria> listarCategorias() {
-        return categoriaRepository.findAll();
+        return categoriaRepository.findByEstadoTrue();
     }
 
     public Categoria buscarCategoria(Integer id) {
-        return categoriaRepository.findById(id).orElse(null);
-
+        return categoriaRepository
+                .findByIdCategoriaAndEstadoTrue(id)
+                .orElse(null);
     }
 
     public Categoria guardarCategoria(Categoria categoria) {
@@ -29,6 +30,12 @@ public class CategoriaServicio {
     }
 
     public void eliminarCategoria(Integer id) {
-        categoriaRepository.deleteById(id);
+
+        Categoria categoria = buscarCategoria(id);
+
+        if (categoria != null) {
+            categoria.setEstado(false);
+            categoriaRepository.save(categoria);
+        }
     }
 }
