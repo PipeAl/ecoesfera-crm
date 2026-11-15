@@ -1,0 +1,430 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ecoesfera CRM | Ventas</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+
+    <style>
+        .formulario-venta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .campo label {
+            font-weight: bold;
+        }
+
+        .campo input,
+        .campo select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .boton {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #174a7e;
+            color: white;
+        }
+
+        .boton:hover {
+            opacity: 0.9;
+        }
+
+        .tabla-ventas {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .tabla-ventas th,
+        .tabla-ventas td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .tabla-ventas th {
+            background: #174a7e;
+            color: white;
+        }
+
+        .total-venta {
+            text-align: right;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .mensaje {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <aside class="menu-lateral">
+
+        <div class="logo">🌿Ecoesfera</div>
+        <p class="subtitulo-logo">Gestión de productos naturales</p>
+
+        <h3>Principal</h3>
+        <a href="/index.html">⌂ Inicio</a><br>
+        <a href="/productos.html">▣ Productos</a><br>
+        <a href="/categorias.html">▤ Categorías</a><br>
+
+        <h3>Gestión comercial</h3>
+        <a href="/clientes.html">👥 Clientes</a><br>
+        <a href="/proveedores.html">🏢 Proveedores</a><br>
+        <a href="/ventas.html" class="activo">💰 Ventas</a><br>
+
+        <h3>Sistema</h3>
+        <a href="/usuarios.html">👤 Usuarios</a><br>
+
+    </aside>
+
+    <main class="contenido">
+
+        <header class="encabezado">
+            <h1>Gestión de ventas</h1>
+            <p>Registro y administración de ventas de Ecoesfera</p>
+        </header>
+
+        <section class="panel">
+
+            <section class="seccion">
+
+                <h2>Registrar nueva venta</h2>
+
+                <div class="formulario-venta">
+
+                    <div class="campo">
+                        <label for="cliente">Seleccionar cliente</label>
+                        <select id="cliente">
+                            <option value="">Cargando clientes...</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="producto">Seleccionar producto</label>
+                        <select id="producto">
+                            <option value="">Cargando productos...</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="cantidad">Cantidad</label>
+                        <input
+                            type="number"
+                            id="cantidad"
+                            min="1"
+                            value="1"
+                        >
+                    </div>
+
+                </div>
+
+                <button class="boton" onclick="agregarProducto()">
+                    Agregar producto
+                </button>
+
+            </section>
+
+            <section class="seccion">
+
+                <h2>Productos de la venta</h2>
+
+                <table class="tabla-ventas">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio unitario</th>
+                            <th>Subtotal</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="listaVenta">
+                        <tr>
+                            <td colspan="5">No hay productos agregados.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="total-venta">
+                    Total: $<span id="totalVenta">0</span>
+                </div>
+
+                <button
+                    class="boton"
+                    onclick="registrarVenta()"
+                    style="margin-top: 15px;"
+                >
+                    Registrar venta
+                </button>
+
+                <p id="mensaje" class="mensaje"></p>
+
+            </section>
+
+        </section>
+
+        <footer class="pie">
+            Ecoesfera CRM · Proyecto formativo SENA
+        </footer>
+
+    </main>
+
+</div>
+
+<script>
+
+    let productosDisponibles = [];
+    let carrito = [];
+
+    const formatoMoneda = valor =>
+        Number(valor).toLocaleString("es-CO");
+
+    async function cargarClientes() {
+        const select = document.getElementById("cliente");
+
+        try {
+            const respuesta = await fetch("/api/clientes");
+
+            if (!respuesta.ok) {
+                throw new Error("No se pudieron consultar los clientes");
+            }
+
+            const clientes = await respuesta.json();
+
+            select.innerHTML = '<option value="">Seleccione un cliente</option>';
+
+            clientes.forEach(cliente => {
+                const opcion = document.createElement("option");
+
+                opcion.value = cliente.idCliente;
+                opcion.textContent =
+                    `${cliente.nombres} ${cliente.apellidos}`;
+
+                select.appendChild(opcion);
+            });
+
+        } catch (error) {
+            select.innerHTML = '<option value="">Error al cargar clientes</option>';
+            console.error(error);
+        }
+    }
+
+    async function cargarProductos() {
+        const select = document.getElementById("producto");
+
+        try {
+            const respuesta = await fetch("/api/productos");
+
+            if (!respuesta.ok) {
+                throw new Error("No se pudieron consultar los productos");
+            }
+
+            const productos = await respuesta.json();
+
+            productosDisponibles = productos.filter(
+                producto => producto.estado === true && producto.stock > 0
+            );
+
+            select.innerHTML = '<option value="">Seleccione un producto</option>';
+
+            productosDisponibles.forEach(producto => {
+                const opcion = document.createElement("option");
+
+                opcion.value = producto.idProducto;
+                opcion.textContent =
+                    `${producto.nombre} - $${formatoMoneda(producto.precioVenta)} (Stock: ${producto.stock})`;
+
+                select.appendChild(opcion);
+            });
+
+        } catch (error) {
+            select.innerHTML = '<option value="">Error al cargar productos</option>';
+            console.error(error);
+        }
+    }
+
+    function agregarProducto() {
+        const idProducto = Number(document.getElementById("producto").value);
+        const cantidad = Number(document.getElementById("cantidad").value);
+        const mensaje = document.getElementById("mensaje");
+
+        mensaje.textContent = "";
+
+        if (!idProducto) {
+            mensaje.textContent = "Seleccione un producto.";
+            return;
+        }
+
+        if (!Number.isInteger(cantidad) || cantidad <= 0) {
+            mensaje.textContent = "Ingrese una cantidad válida.";
+            return;
+        }
+
+        const producto = productosDisponibles.find(
+            p => p.idProducto === idProducto
+        );
+
+        if (!producto) {
+            mensaje.textContent = "El producto seleccionado no está disponible.";
+            return;
+        }
+
+        const existente = carrito.find(
+            p => p.idProducto === idProducto
+        );
+
+        const cantidadActual = existente ? existente.cantidad : 0;
+
+        if (cantidadActual + cantidad > producto.stock) {
+            mensaje.textContent = "La cantidad supera el stock disponible.";
+            return;
+        }
+
+        if (existente) {
+            existente.cantidad += cantidad;
+        } else {
+            carrito.push({
+                idProducto: producto.idProducto,
+                nombre: producto.nombre,
+                precio: Number(producto.precioVenta),
+                cantidad: cantidad
+            });
+        }
+
+        document.getElementById("cantidad").value = 1;
+        document.getElementById("producto").value = "";
+
+        mostrarCarrito();
+    }
+
+    function mostrarCarrito() {
+        const lista = document.getElementById("listaVenta");
+
+        lista.innerHTML = "";
+
+        let total = 0;
+
+        if (carrito.length === 0) {
+            lista.innerHTML =
+                '<tr><td colspan="5">No hay productos agregados.</td></tr>';
+        }
+
+        carrito.forEach((producto, indice) => {
+            const subtotal = producto.precio * producto.cantidad;
+
+            total += subtotal;
+
+            const fila = document.createElement("tr");
+
+            fila.innerHTML = `
+                <td>${producto.nombre}</td>
+                <td>${producto.cantidad}</td>
+                <td>$${formatoMoneda(producto.precio)}</td>
+                <td>$${formatoMoneda(subtotal)}</td>
+                <td>
+                    <button class="boton" onclick="eliminarProducto(${indice})">
+                        Eliminar
+                    </button>
+                </td>
+            `;
+
+            lista.appendChild(fila);
+        });
+
+        document.getElementById("totalVenta").textContent =
+            formatoMoneda(total);
+    }
+
+    function eliminarProducto(indice) {
+        carrito.splice(indice, 1);
+        mostrarCarrito();
+    }
+
+    async function registrarVenta() {
+        const idCliente = Number(document.getElementById("cliente").value);
+        const mensaje = document.getElementById("mensaje");
+
+        mensaje.textContent = "";
+
+        if (!idCliente) {
+            mensaje.textContent = "Seleccione un cliente.";
+            return;
+        }
+
+        if (carrito.length === 0) {
+            mensaje.textContent = "Agregue al menos un producto.";
+            return;
+        }
+
+        const venta = {
+            idCliente: idCliente,
+            detalles: carrito.map(producto => ({
+                idProducto: producto.idProducto,
+                cantidad: producto.cantidad
+            }))
+        };
+
+        try {
+            const respuesta = await fetch("/api/ventas", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(venta)
+            });
+
+            const resultado = await respuesta.json();
+
+            if (!respuesta.ok) {
+                throw new Error(
+                    resultado.message || "No se pudo registrar la venta"
+                );
+            }
+
+            mensaje.textContent = "¡Venta registrada correctamente!";
+            carrito = [];
+
+            mostrarCarrito();
+
+            await cargarProductos();
+
+        } catch (error) {
+            mensaje.textContent = error.message;
+            console.error("Error al registrar la venta:", error);
+        }
+    }
+
+    cargarClientes();
+    cargarProductos();
+
+</script>
+
+</body>
+</html>

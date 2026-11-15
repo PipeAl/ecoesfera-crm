@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Clientes | Ecoesfera CRM</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+
+    <style>
+        .contenido {
+            flex: 1;
+            min-width: 0;
+            padding: 30px;
+        }
+
+        .encabezado-modulo {
+            margin-bottom: 25px;
+        }
+
+        .encabezado-modulo h1 {
+            color: var(--azul);
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .tarjeta {
+            background: var(--blanco);
+            border: 1px solid var(--borde);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 22px;
+        }
+
+        .tarjeta h2 {
+            color: var(--azul);
+            margin-bottom: 20px;
+        }
+
+        #formularioCliente {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .grupo-formulario {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .grupo-formulario label {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .grupo-formulario input {
+            padding: 12px;
+            border: 1px solid var(--borde);
+            border-radius: 7px;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .grupo-formulario input:focus {
+            outline: none;
+            border-color: var(--azul);
+            box-shadow: 0 0 0 2px rgba(23, 74, 126, 0.12);
+        }
+
+        #formularioCliente button {
+            grid-column: 1 / -1;
+            width: fit-content;
+            padding: 12px 24px;
+            background: var(--azul);
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #formularioCliente button:hover {
+            background: #10385f;
+        }
+
+        #mensaje {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .tabla-contenedor {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .tabla-contenedor table {
+            width: 100%;
+            min-width: 850px;
+            border-collapse: collapse;
+        }
+
+        .tabla-contenedor th {
+            background: var(--verde-claro);
+            color: var(--azul);
+            padding: 14px;
+            text-align: left;
+        }
+
+        .tabla-contenedor td {
+            padding: 12px;
+            border-bottom: 1px solid var(--borde);
+        }
+
+        .tabla-contenedor tbody tr:hover {
+            background: #f8fbf8;
+        }
+
+        .tabla-contenedor td button {
+            padding: 8px 11px;
+            margin: 2px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .tabla-contenedor td button:first-child {
+            background: var(--azul);
+        }
+
+        .tabla-contenedor td button:last-child {
+            background: #c62828;
+        }
+
+        .pie {
+            margin-top: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .contenido {
+                padding: 18px;
+            }
+
+            #formularioCliente {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="contenedor">
+
+        
+    <!-- MENÚ LATERAL -->
+    <aside class="menu-lateral">
+
+    <div class="logo">🌿Ecoesfera</div>
+    <p class="subtitulo-logo">Gestión de productos naturales</p>
+
+    <h3>Principal</h3>
+    <a href="/index.html">⌂ Inicio</a><br>
+    <a href="/productos.html">▣ Productos</a><br>
+    <a href="/categorias.html">▤ Categorías</a><br>
+
+    <h3>Gestión comercial</h3>
+    <a href="/clientes.html" class="activo">👥 Clientes</a><br>
+    <a href="/proveedores.html">🏢 Proveedores</a><br>
+    <a href="/ventas.html">💰 Ventas</a><br>
+
+    <h3>Sistema</h3>
+    <a href="/usuarios.html">👤 Usuarios</a><br>
+
+    </aside>
+
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="contenido">
+
+            <header class="encabezado-modulo">
+                <h1>Gestión de clientes</h1>
+                <p>Administra la información de los clientes de Ecoesfera.</p>
+            </header>
+
+            <!-- FORMULARIO -->
+            <section class="tarjeta">
+
+                <h2>Registrar cliente</h2>
+
+                <form id="formularioCliente">
+
+                    <div class="grupo-formulario">
+                        <label for="nombres">Nombres</label>
+                        <input type="text" id="nombres" required>
+                    </div>
+
+                    <div class="grupo-formulario">
+                        <label for="apellidos">Apellidos</label>
+                        <input type="text" id="apellidos" required>
+                    </div>
+
+                    <div class="grupo-formulario">
+                        <label for="documento">Documento</label>
+                        <input type="text" id="documento" required>
+                    </div>
+
+                    <div class="grupo-formulario">
+                        <label for="correo">Correo electrónico</label>
+                        <input type="email" id="correo">
+                    </div>
+
+                    <div class="grupo-formulario">
+                        <label for="telefono">Teléfono</label>
+                        <input type="text" id="telefono">
+                    </div>
+
+                    <div class="grupo-formulario">
+                        <label for="direccion">Dirección</label>
+                        <input type="text" id="direccion">
+                    </div>
+
+                    <button type="submit">
+                        Registrar cliente
+                    </button>
+
+                </form>
+
+                <p id="mensaje"></p>
+
+            </section>
+
+            <!-- TABLA DE CLIENTES -->
+            <section class="tarjeta">
+
+                <h2>Clientes registrados</h2>
+
+                <div class="tabla-contenedor">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Documento</th>
+                                <th>Correo</th>
+                                <th>Teléfono</th>
+                                <th>Dirección</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tablaClientes">
+                            <tr>
+                                <td colspan="8">
+                                    Cargando clientes...
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+            <footer class="pie">
+                Ecoesfera CRM · Proyecto formativo SENA
+            </footer>
+
+        </main>
+
+    </div>
+
+    <!-- CONEXIÓN JAVASCRIPT -->
+    <script src="js/clientes.js"></script>
+
+</body>
+</html>

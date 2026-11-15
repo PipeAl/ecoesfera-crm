@@ -1,3 +1,4 @@
+
 package com.sena.adso.crm.repository;
 
 import com.sena.adso.crm.entidades.Categoria;
@@ -12,4 +13,12 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
 
     Optional<Categoria> findByIdCategoriaAndEstadoTrue(Integer idCategoria);
 
+    Optional<Categoria> findByNombreIgnoreCase(String nombre);
+
+    boolean existsByNombreIgnoreCase(String nombre);
+
+    boolean existsByNombreIgnoreCaseAndIdCategoriaNot(
+            String nombre,
+            Integer idCategoria
+    );
 }

@@ -1,0 +1,564 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proveedores | Ecoesfera CRM</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+
+    <style>
+        .encabezado-modulo {
+            margin-bottom: 25px;
+        }
+
+        .encabezado-modulo h1 {
+            color: var(--azul);
+            margin-bottom: 8px;
+        }
+
+        .tarjeta {
+            background: var(--blanco);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--borde);
+            margin-bottom: 25px;
+        }
+
+        .tarjeta h2 {
+            color: var(--azul);
+            margin-bottom: 20px;
+        }
+
+        .formulario {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .campo.completo {
+            grid-column: 1 / -1;
+        }
+
+        .campo input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid var(--borde);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font: inherit;
+        }
+
+        .botones {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+
+        .botones button {
+            background: var(--azul);
+            color: white;
+            border: none;
+            padding: 11px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .botones button:hover {
+            background: #12395f;
+        }
+
+        .botones button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .btn-editar {
+            background: var(--azul);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .btn-eliminar {
+            background: #c62828;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+
+        .tabla-contenedor {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th, td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid var(--borde);
+        }
+
+        th {
+            background: var(--azul);
+            color: white;
+        }
+
+        .mensaje {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 7px;
+            display: none;
+        }
+
+        .pie {
+            margin-top: 25px;
+            text-align: center;
+            color: #666;
+        }
+
+        @media (max-width: 600px) {
+            .contenido {
+                padding: 15px;
+            }
+
+            .campo.completo {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <!-- MENÚ LATERAL -->
+
+    <aside class="menu-lateral">
+
+        <div class="logo">🌿Ecoesfera</div>
+        <p class="subtitulo-logo">Gestión de productos naturales</p>
+
+        <h3>Principal</h3>
+        <a href="/index.html">⌂ Inicio</a><br>
+        <a href="/productos.html">▣ Productos</a><br>
+        <a href="/categorias.html">▤ Categorías</a><br>
+
+        <h3>Gestión comercial</h3>
+        <a href="/clientes.html">👥 Clientes</a><br>
+        <a href="/proveedores.html" class="activo">🏢 Proveedores</a><br>
+        <a href="/ventas.html">💰 Ventas</a><br>
+
+        <h3>Sistema</h3>
+        <a href="/usuarios.html">👤 Usuarios</a><br>
+
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+
+    <main class="contenido">
+
+        <header class="encabezado">
+            <h1>Gestión de proveedores</h1>
+            <p>Registro y administración de proveedores de productos naturales.</p>
+        </header>
+
+        <!-- FORMULARIO -->
+
+        <section class="panel">
+
+            <section class="seccion">
+
+                <h2 id="tituloFormulario">Registrar proveedor</h2>
+
+                <form id="formularioProveedor">
+
+                    <input type="hidden" id="idProveedor">
+
+                    <div class="formulario">
+
+                        <div class="campo">
+                            <label for="nombreEmpresa">Nombre de la empresa *</label>
+                            <input
+                                type="text"
+                                id="nombreEmpresa"
+                                maxlength="150"
+                                required>
+                        </div>
+
+                        <div class="campo">
+                            <label for="contacto">Persona de contacto</label>
+                            <input
+                                type="text"
+                                id="contacto">
+                        </div>
+
+                        <div class="campo">
+                            <label for="telefono">Teléfono</label>
+                            <input
+                                type="text"
+                                id="telefono">
+                        </div>
+
+                        <div class="campo">
+                            <label for="correo">Correo electrónico</label>
+                            <input
+                                type="email"
+                                id="correo">
+                        </div>
+
+                        <div class="campo completo">
+                            <label for="direccion">Dirección</label>
+                            <input
+                                type="text"
+                                id="direccion">
+                        </div>
+
+                    </div>
+
+                    <div class="botones">
+
+                        <button type="submit" id="btnGuardar">
+                            Guardar proveedor
+                        </button>
+
+                        <button
+                            type="button"
+                            id="btnCancelar"
+                            style="display:none;">
+                            Cancelar edición
+                        </button>
+
+                    </div>
+
+                    <p id="mensaje" class="mensaje"></p>
+
+                </form>
+
+            </section>
+
+            <!-- LISTADO -->
+
+            <section class="seccion" style="margin-top: 25px;">
+
+                <h2>Listado de proveedores</h2>
+
+                <p>Consulta y administra los proveedores registrados.</p>
+
+                <div class="tabla-contenedor">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Empresa</th>
+                                <th>Contacto</th>
+                                <th>Teléfono</th>
+                                <th>Correo</th>
+                                <th>Dirección</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tablaProveedores">
+                            <tr>
+                                <td colspan="7">Cargando proveedores...</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </section>
+
+        <footer class="pie">
+            Ecoesfera CRM · Proyecto formativo SENA
+        </footer>
+
+    </main>
+
+</div>
+
+<!-- JAVASCRIPT -->
+
+<script>
+
+    const API = "/api/proveedores";
+
+    const formulario = document.getElementById("formularioProveedor");
+    const tabla = document.getElementById("tablaProveedores");
+    const mensaje = document.getElementById("mensaje");
+
+    const idProveedor = document.getElementById("idProveedor");
+    const nombreEmpresa = document.getElementById("nombreEmpresa");
+    const contacto = document.getElementById("contacto");
+    const telefono = document.getElementById("telefono");
+    const correo = document.getElementById("correo");
+    const direccion = document.getElementById("direccion");
+
+    const btnGuardar = document.getElementById("btnGuardar");
+    const btnCancelar = document.getElementById("btnCancelar");
+
+    function mostrarMensaje(texto, tipo) {
+        mensaje.textContent = texto;
+        mensaje.style.display = "block";
+        mensaje.style.color = tipo === "exito" ? "green" : "red";
+        mensaje.style.background = tipo === "exito" ? "#e5f5e8" : "#ffeded";
+    }
+
+    async function cargarProveedores() {
+
+        try {
+
+            const respuesta = await fetch(API);
+
+            if (!respuesta.ok) {
+                throw new Error("No fue posible consultar los proveedores.");
+            }
+
+            const proveedores = await respuesta.json();
+
+            tabla.innerHTML = "";
+
+            const activos = proveedores.filter(
+                proveedor => Number(proveedor.estado) === 1
+            );
+
+            if (activos.length === 0) {
+                tabla.innerHTML = `
+                    <tr>
+                        <td colspan="7">No hay proveedores registrados.</td>
+                    </tr>`;
+                return;
+            }
+
+            activos.forEach(proveedor => {
+
+                const fila = document.createElement("tr");
+
+                [
+                    proveedor.idProveedor,
+                    proveedor.nombreEmpresa,
+                    proveedor.contacto || "",
+                    proveedor.telefono || "",
+                    proveedor.correo || "",
+                    proveedor.direccion || ""
+                ].forEach(valor => {
+
+                    const celda = document.createElement("td");
+                    celda.textContent = valor ?? "";
+                    fila.appendChild(celda);
+
+                });
+
+                const acciones = document.createElement("td");
+
+                const editar = document.createElement("button");
+                editar.textContent = "Editar";
+                editar.className = "btn-editar";
+
+                editar.addEventListener("click", () => {
+                    editarProveedor(proveedor);
+                });
+
+                const eliminar = document.createElement("button");
+                eliminar.textContent = "Desactivar";
+                eliminar.className = "btn-eliminar";
+
+                eliminar.addEventListener("click", () => {
+                    desactivarProveedor(proveedor.idProveedor);
+                });
+
+                acciones.appendChild(editar);
+                acciones.appendChild(eliminar);
+
+                fila.appendChild(acciones);
+                tabla.appendChild(fila);
+
+            });
+
+        } catch (error) {
+
+            tabla.innerHTML = `
+                <tr>
+                    <td colspan="7">Error al cargar los proveedores.</td>
+                </tr>`;
+
+            console.error(error);
+
+        }
+
+    }
+
+    formulario.addEventListener("submit", async function(evento) {
+
+        evento.preventDefault();
+
+        const proveedor = {
+
+            nombreEmpresa: nombreEmpresa.value.trim(),
+            contacto: contacto.value.trim(),
+            telefono: telefono.value.trim(),
+            correo: correo.value.trim(),
+            direccion: direccion.value.trim()
+
+        };
+
+        const id = idProveedor.value;
+
+        const url = id ? `${API}/${id}` : API;
+        const metodo = id ? "PUT" : "POST";
+
+        btnGuardar.disabled = true;
+        btnGuardar.textContent = "Guardando...";
+
+        try {
+
+            const respuesta = await fetch(url, {
+
+                method: metodo,
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(proveedor)
+
+            });
+
+            if (!respuesta.ok) {
+                throw new Error("No fue posible guardar el proveedor.");
+            }
+
+            mostrarMensaje(
+                id
+                    ? "Proveedor actualizado correctamente."
+                    : "Proveedor registrado correctamente.",
+                "exito"
+            );
+
+            limpiarFormulario();
+            await cargarProveedores();
+
+        } catch (error) {
+
+            mostrarMensaje(error.message, "error");
+            console.error(error);
+
+        } finally {
+
+            btnGuardar.disabled = false;
+            btnGuardar.textContent = id
+                ? "Guardar proveedor"
+                : "Guardar proveedor";
+
+        }
+
+    });
+
+    function editarProveedor(proveedor) {
+
+        idProveedor.value = proveedor.idProveedor;
+        nombreEmpresa.value = proveedor.nombreEmpresa || "";
+        contacto.value = proveedor.contacto || "";
+        telefono.value = proveedor.telefono || "";
+        correo.value = proveedor.correo || "";
+        direccion.value = proveedor.direccion || "";
+
+        document.getElementById("tituloFormulario").textContent =
+            "Editar proveedor";
+
+        btnGuardar.textContent = "Actualizar proveedor";
+        btnCancelar.style.display = "inline-block";
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+
+    async function desactivarProveedor(id) {
+
+        if (!confirm("¿Deseas desactivar este proveedor?")) {
+            return;
+        }
+
+        try {
+
+            const respuesta = await fetch(`${API}/${id}`, {
+                method: "DELETE"
+            });
+
+            if (!respuesta.ok) {
+                throw new Error("No fue posible desactivar el proveedor.");
+            }
+
+            mostrarMensaje(
+                "Proveedor desactivado correctamente.",
+                "exito"
+            );
+
+            await cargarProveedores();
+
+        } catch (error) {
+
+            mostrarMensaje(error.message, "error");
+            console.error(error);
+
+        }
+
+    }
+
+    function limpiarFormulario() {
+
+        formulario.reset();
+        idProveedor.value = "";
+
+        document.getElementById("tituloFormulario").textContent =
+            "Registrar proveedor";
+
+        btnGuardar.textContent = "Guardar proveedor";
+        btnCancelar.style.display = "none";
+
+    }
+
+    btnCancelar.addEventListener("click", function() {
+
+        limpiarFormulario();
+        mensaje.style.display = "none";
+
+    });
+
+    cargarProveedores();
+
+</script>
+
+</body>
+</html>

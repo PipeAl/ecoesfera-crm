@@ -1,0 +1,590 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Categorías | Ecoesfera CRM</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+
+    <style>
+        .contenido {
+            padding: 30px;
+        }
+
+        .encabezado-modulo {
+            margin-bottom: 25px;
+        }
+
+        .encabezado-modulo h1 {
+            color: var(--azul);
+            margin-bottom: 8px;
+        }
+
+        .contenedor-formulario,
+        .contenedor-tabla {
+            background: var(--blanco);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--borde);
+            margin-bottom: 25px;
+        }
+
+        .contenedor-formulario h2,
+        .contenedor-tabla h2 {
+            color: var(--azul);
+            margin-bottom: 20px;
+        }
+
+        .grupo-formulario {
+            margin-bottom: 18px;
+        }
+
+        .grupo-formulario label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 600;
+        }
+
+        .grupo-formulario input,
+        .grupo-formulario textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid var(--borde);
+            border-radius: 7px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .grupo-formulario textarea {
+            min-height: 85px;
+            resize: vertical;
+        }
+
+        .acciones {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-guardar,
+        .btn-editar {
+            background: var(--azul);
+            color: white;
+        }
+
+        .btn-cancelar {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-eliminar {
+            background: #c62828;
+            color: white;
+        }
+
+        .tabla-contenedor {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid var(--borde);
+        }
+
+        th {
+            background: var(--verde-claro);
+            color: var(--texto);
+        }
+
+        .mensaje {
+            padding: 12px;
+            border-radius: 7px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .mensaje-exito {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .mensaje-error {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .estado-carga {
+            padding: 15px;
+            color: #666;
+        }
+
+        @media (max-width: 700px) {
+            .contenido {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="contenedor">
+
+        <!-- Menú lateral de navegación -->
+        <aside class="menu-lateral">
+
+            <div class="logo">🌿Ecoesfera</div>
+            <p class="subtitulo-logo">Gestión de productos naturales</p>
+
+            <h3>Principal</h3>
+            <a href="/index.html">⌂ Inicio</a>
+            <a href="/productos.html">▣ Productos</a>
+            <a href="/categorias.html" class="activo">▤ Categorías</a>
+
+            <h3>Gestión comercial</h3>
+            <a href="/clientes.html">👥 Clientes</a>
+            <a href="/proveedores.html">🚚 Proveedores</a>
+            <a href="/ventas.html">💰 Ventas</a>
+
+            <h3>Sistema</h3>
+            <a href="/usuarios.html">👤 Usuarios</a>
+
+        </aside>
+
+        <!-- Área principal -->
+        <main class="contenido">
+
+            <header class="encabezado-modulo">
+                <h1>Gestión de categorías</h1>
+                <p>Administra las categorías de los productos naturales.</p>
+            </header>
+
+            <!-- Formulario -->
+            <section class="contenedor-formulario">
+
+                <h2 id="tituloFormulario">Registrar categoría</h2>
+
+                <div id="mensajeFormulario" class="mensaje"></div>
+
+                <form id="formularioCategoria">
+
+                    <input type="hidden" id="idCategoria">
+
+                    <div class="grupo-formulario">
+                        <label for="nombre">Nombre de la categoría</label>
+                        <input
+                            type="text"
+                            id="nombre"
+                            maxlength="50"
+                            placeholder="Ejemplo: Vitaminas"
+                            required>
+                    </div>
+
+                    <div class="grupo-formulario">
+                        <label for="descripcion">Descripción</label>
+                        <textarea
+                            id="descripcion"
+                            maxlength="255"
+                            placeholder="Describe la categoría"
+                            required></textarea>
+                    </div>
+
+                    <div class="acciones">
+
+                        <button
+                            type="submit"
+                            class="btn btn-guardar"
+                            id="btnGuardar">
+                            Registrar categoría
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-cancelar"
+                            id="btnCancelar"
+                            style="display:none"
+                            onclick="limpiarFormulario()">
+                            Cancelar edición
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </section>
+
+            <!-- Tabla de categorías -->
+            <section class="contenedor-tabla">
+
+                <h2>Categorías registradas</h2>
+
+                <div id="mensajeTabla" class="mensaje"></div>
+
+                <div class="tabla-contenedor">
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tablaCategorias">
+                            <tr>
+                                <td colspan="5" class="estado-carga">
+                                    Cargando categorías...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </section>
+
+            <footer class="pie">
+                Ecoesfera CRM · Proyecto formativo SENA
+            </footer>
+
+        </main>
+
+    </div>
+
+    <!-- JavaScript del módulo de categorías -->
+    <script>
+
+        const API_URL = "/api/categorias";
+
+        const formulario = document.getElementById("formularioCategoria");
+        const tabla = document.getElementById("tablaCategorias");
+
+        const mensajeFormulario = document.getElementById("mensajeFormulario");
+        const mensajeTabla = document.getElementById("mensajeTabla");
+
+        const campoId = document.getElementById("idCategoria");
+        const campoNombre = document.getElementById("nombre");
+        const campoDescripcion = document.getElementById("descripcion");
+
+        const tituloFormulario = document.getElementById("tituloFormulario");
+        const btnGuardar = document.getElementById("btnGuardar");
+        const btnCancelar = document.getElementById("btnCancelar");
+
+        function mostrarMensaje(elemento, texto, tipo) {
+            elemento.textContent = texto;
+            elemento.className = "mensaje " +
+                (tipo === "exito" ? "mensaje-exito" : "mensaje-error");
+            elemento.style.display = "block";
+        }
+
+        function ocultarMensaje(elemento) {
+            elemento.style.display = "none";
+            elemento.textContent = "";
+        }
+
+        async function obtenerRespuesta(respuesta) {
+            const texto = await respuesta.text();
+
+            if (!texto) {
+                return null;
+            }
+
+            try {
+                return JSON.parse(texto);
+            } catch {
+                return texto;
+            }
+        }
+
+        function obtenerMensajeError(datos, respuesta) {
+            if (datos && typeof datos === "object") {
+                return datos.message ||
+                       datos.mensaje ||
+                       datos.error ||
+                       datos.detail ||
+                       `Error ${respuesta.status}: ${respuesta.statusText}`;
+            }
+
+            return typeof datos === "string" && datos.trim()
+                ? datos
+                : `Error ${respuesta.status}: ${respuesta.statusText}`;
+        }
+
+        async function cargarCategorias() {
+
+            tabla.innerHTML = `
+                <tr>
+                    <td colspan="5" class="estado-carga">
+                        Cargando categorías...
+                    </td>
+                </tr>
+            `;
+
+            try {
+
+                const respuesta = await fetch(API_URL);
+                const datos = await obtenerRespuesta(respuesta);
+
+                if (!respuesta.ok) {
+                    throw new Error(obtenerMensajeError(datos, respuesta));
+                }
+
+                tabla.innerHTML = "";
+
+                if (!Array.isArray(datos) || datos.length === 0) {
+
+                    tabla.innerHTML = `
+                        <tr>
+                            <td colspan="5">No hay categorías registradas.</td>
+                        </tr>
+                    `;
+
+                    return;
+                }
+
+                datos.forEach(categoria => {
+
+                    const fila = document.createElement("tr");
+
+                    const id = categoria.idCategoria ?? categoria.id_categoria;
+                    const nombre = categoria.nombre ?? "";
+                    const descripcion = categoria.descripcion ?? "";
+                    const estado = categoria.estado;
+
+                    const celdaId = document.createElement("td");
+                    celdaId.textContent = id;
+
+                    const celdaNombre = document.createElement("td");
+                    celdaNombre.textContent = nombre;
+
+                    const celdaDescripcion = document.createElement("td");
+                    celdaDescripcion.textContent = descripcion;
+
+                    const celdaEstado = document.createElement("td");
+                    celdaEstado.textContent =
+                        estado === true || estado === 1 ? "Activa" : "Inactiva";
+
+                    const celdaAcciones = document.createElement("td");
+
+                    const botonEditar = document.createElement("button");
+                    botonEditar.textContent = "Editar";
+                    botonEditar.className = "btn btn-editar";
+                    botonEditar.addEventListener("click", () => editarCategoria(categoria));
+
+                    const botonEliminar = document.createElement("button");
+                    botonEliminar.textContent = "Desactivar";
+                    botonEliminar.className = "btn btn-eliminar";
+                    botonEliminar.addEventListener("click", () => desactivarCategoria(id));
+
+                    celdaAcciones.appendChild(botonEditar);
+                    celdaAcciones.appendChild(botonEliminar);
+
+                    fila.appendChild(celdaId);
+                    fila.appendChild(celdaNombre);
+                    fila.appendChild(celdaDescripcion);
+                    fila.appendChild(celdaEstado);
+                    fila.appendChild(celdaAcciones);
+
+                    tabla.appendChild(fila);
+
+                });
+
+            } catch (error) {
+
+                tabla.innerHTML = `
+                    <tr>
+                        <td colspan="5">No fue posible cargar las categorías.</td>
+                    </tr>
+                `;
+
+                mostrarMensaje(
+                    mensajeTabla,
+                    error.message,
+                    "error"
+                );
+
+            }
+
+        }
+
+        formulario.addEventListener("submit", async function(evento) {
+
+            evento.preventDefault();
+
+            ocultarMensaje(mensajeFormulario);
+
+            const id = campoId.value;
+
+            const categoria = {
+                nombre: campoNombre.value.trim(),
+                descripcion: campoDescripcion.value.trim()
+            };
+
+            if (!categoria.nombre || !categoria.descripcion) {
+                mostrarMensaje(
+                    mensajeFormulario,
+                    "Completa todos los campos.",
+                    "error"
+                );
+                return;
+            }
+
+            const metodo = id ? "PUT" : "POST";
+            const url = id ? `${API_URL}/${id}` : API_URL;
+
+            btnGuardar.disabled = true;
+            btnGuardar.textContent = "Guardando...";
+
+            try {
+
+                const respuesta = await fetch(url, {
+                    method: metodo,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(categoria)
+                });
+
+                const datos = await obtenerRespuesta(respuesta);
+
+                if (!respuesta.ok) {
+                    throw new Error(obtenerMensajeError(datos, respuesta));
+                }
+
+                mostrarMensaje(
+                    mensajeFormulario,
+                    id
+                        ? "Categoría actualizada correctamente."
+                        : "Categoría registrada correctamente.",
+                    "exito"
+                );
+
+                limpiarFormulario();
+                await cargarCategorias();
+
+            } catch (error) {
+
+                mostrarMensaje(
+                    mensajeFormulario,
+                    error.message,
+                    "error"
+                );
+
+            } finally {
+
+                btnGuardar.disabled = false;
+                btnGuardar.textContent = campoId.value
+                    ? "Actualizar categoría"
+                    : "Registrar categoría";
+
+            }
+
+        });
+
+        function editarCategoria(categoria) {
+
+            campoId.value = categoria.idCategoria ?? categoria.id_categoria;
+            campoNombre.value = categoria.nombre ?? "";
+            campoDescripcion.value = categoria.descripcion ?? "";
+
+            tituloFormulario.textContent = "Editar categoría";
+            btnGuardar.textContent = "Actualizar categoría";
+            btnCancelar.style.display = "inline-block";
+
+            ocultarMensaje(mensajeFormulario);
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+
+        function limpiarFormulario() {
+
+            formulario.reset();
+            campoId.value = "";
+
+            tituloFormulario.textContent = "Registrar categoría";
+            btnGuardar.textContent = "Registrar categoría";
+            btnCancelar.style.display = "none";
+
+            ocultarMensaje(mensajeFormulario);
+
+        }
+
+        async function desactivarCategoria(id) {
+
+            const confirmar = confirm(
+                "¿Estás seguro de que deseas desactivar esta categoría?"
+            );
+
+            if (!confirmar) {
+                return;
+            }
+
+            ocultarMensaje(mensajeTabla);
+
+            try {
+
+                const respuesta = await fetch(`${API_URL}/${id}`, {
+                    method: "DELETE"
+                });
+
+                const datos = await obtenerRespuesta(respuesta);
+
+                if (!respuesta.ok) {
+                    throw new Error(obtenerMensajeError(datos, respuesta));
+                }
+
+                mostrarMensaje(
+                    mensajeTabla,
+                    "Categoría desactivada correctamente.",
+                    "exito"
+                );
+
+                await cargarCategorias();
+
+            } catch (error) {
+
+                mostrarMensaje(
+                    mensajeTabla,
+                    error.message,
+                    "error"
+                );
+
+            }
+
+        }
+
+        cargarCategorias();
+
+    </script>
+
+</body>
+</html>

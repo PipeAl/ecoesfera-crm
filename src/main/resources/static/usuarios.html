@@ -1,0 +1,829 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios | Ecoesfera</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+
+    <style>
+        .contenido {
+            padding: 30px;
+        }
+
+        .encabezado-modulo {
+            margin-bottom: 25px;
+        }
+
+        .encabezado-modulo h1 {
+            color: var(--azul);
+            margin-bottom: 8px;
+        }
+
+        .contenedor-formulario,
+        .contenedor-tabla {
+            background: var(--blanco);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--borde);
+            margin-bottom: 25px;
+        }
+
+        .contenedor-formulario h2,
+        .contenedor-tabla h2 {
+            color: var(--azul);
+            margin-bottom: 20px;
+        }
+
+        .formulario-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .grupo-formulario {
+            margin-bottom: 5px;
+        }
+
+        .grupo-formulario label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 600;
+        }
+
+        .grupo-formulario input,
+        .grupo-formulario select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid var(--borde);
+            border-radius: 7px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .ayuda {
+            display: block;
+            margin-top: 5px;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .acciones {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-guardar {
+            background: var(--azul);
+            color: white;
+        }
+
+        .btn-cancelar {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-editar {
+            background: var(--azul);
+            color: white;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .btn-eliminar {
+            background: #c62828;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .tabla-contenedor {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th, td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid var(--borde);
+        }
+
+        th {
+            background: var(--azul);
+            color: white;
+        }
+
+        .mensaje {
+            padding: 12px;
+            border-radius: 7px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .mensaje-exito {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .mensaje-error {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .estado-carga {
+            padding: 15px;
+            color: #666;
+        }
+
+        @media (max-width: 700px) {
+            .contenido {
+                padding: 15px;
+            }
+
+            .formulario-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="contenedor">
+
+        <!-- MENÚ LATERAL -->
+        <aside class="menu-lateral">
+
+            <div class="logo">🌿Ecoesfera</div>
+            <p class="subtitulo-logo">Gestión de productos naturales</p>
+
+            <h3>Principal</h3>
+            <a href="/index.html">⌂ Inicio</a><br>
+            <a href="/productos.html">▣ Productos</a><br>
+            <a href="/categorias.html">▤ Categorías</a><br>
+
+            <h3>Gestión comercial</h3>
+            <a href="/clientes.html">👥 Clientes</a><br>
+            <a href="/proveedores.html">🏢 Proveedores</a><br>
+            <a href="/ventas.html">💰 Ventas</a><br>
+
+            <h3>Sistema</h3>
+            <a href="/usuarios.html" class="activo">👤 Usuarios</a><br>
+
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="contenido">
+
+            <header class="encabezado-modulo">
+                <h1>Gestión de usuarios</h1>
+                <p>Administra los usuarios y sus roles dentro del sistema.</p>
+            </header>
+
+            <section class="contenedor-formulario">
+
+                <h2 id="tituloFormulario">Registrar usuario</h2>
+
+                <div id="mensajeFormulario" class="mensaje"></div>
+
+                <form id="formularioUsuario">
+
+                    <input type="hidden" id="idUsuario">
+
+                    <div class="formulario-grid">
+
+                        <div class="grupo-formulario">
+                            <label for="nombres">Nombres</label>
+                            <input type="text" id="nombres"
+                                maxlength="100"
+                                placeholder="Ingrese los nombres"
+                                required>
+                        </div>
+
+                        <div class="grupo-formulario">
+                            <label for="apellidos">Apellidos</label>
+                            <input type="text" id="apellidos"
+                                maxlength="100"
+                                placeholder="Ingrese los apellidos"
+                                required>
+                        </div>
+
+                        <div class="grupo-formulario">
+                            <label for="correo">Correo electrónico</label>
+                            <input type="email" id="correo"
+                                maxlength="100"
+                                placeholder="ejemplo@correo.com"
+                                required>
+                        </div>
+
+                        <div class="grupo-formulario">
+                            <label for="password">Contraseña</label>
+                            <input type="password" id="password"
+                                minlength="6"
+                                maxlength="100"
+                                placeholder="Ingrese una contraseña">
+                            <small class="ayuda" id="ayudaPassword">
+                                Obligatoria para registrar un usuario.
+                            </small>
+                        </div>
+
+                        <div class="grupo-formulario">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" id="telefono"
+                                maxlength="20"
+                                placeholder="Ingrese el teléfono">
+                        </div>
+
+                        <div class="grupo-formulario">
+                            <label for="direccion">Dirección</label>
+                            <input type="text" id="direccion"
+                                maxlength="150"
+                                placeholder="Ingrese la dirección">
+                        </div>
+
+                        <div class="grupo-formulario">
+                            <label for="idRol">Rol del usuario</label>
+                            <select id="idRol" required>
+                                <option value="">Cargando roles...</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="acciones">
+
+                        <button type="submit"
+                            class="btn btn-guardar"
+                            id="btnGuardar">
+                            Registrar usuario
+                        </button>
+
+                        <button type="button"
+                            class="btn btn-cancelar"
+                            id="btnCancelar"
+                            style="display:none"
+                            onclick="limpiarFormulario()">
+                            Cancelar edición
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </section>
+
+            <section class="contenedor-tabla">
+
+                <h2>Usuarios registrados</h2>
+
+                <div id="mensajeTabla" class="mensaje"></div>
+
+                <div class="tabla-contenedor">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Correo</th>
+                                <th>Teléfono</th>
+                                <th>Rol</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tablaUsuarios">
+                            <tr>
+                                <td colspan="7" class="estado-carga">
+                                    Cargando usuarios...
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <script>
+
+        const API_USUARIOS = "/api/usuarios";
+        const API_ROLES = "/api/roles";
+
+        const formulario = document.getElementById("formularioUsuario");
+        const tabla = document.getElementById("tablaUsuarios");
+
+        const mensajeFormulario =
+            document.getElementById("mensajeFormulario");
+
+        const mensajeTabla =
+            document.getElementById("mensajeTabla");
+
+        const campoId = document.getElementById("idUsuario");
+        const campoNombres = document.getElementById("nombres");
+        const campoApellidos = document.getElementById("apellidos");
+        const campoCorreo = document.getElementById("correo");
+        const campoPassword = document.getElementById("password");
+        const campoTelefono = document.getElementById("telefono");
+        const campoDireccion = document.getElementById("direccion");
+        const campoRol = document.getElementById("idRol");
+
+        const tituloFormulario =
+            document.getElementById("tituloFormulario");
+
+        const btnGuardar = document.getElementById("btnGuardar");
+        const btnCancelar = document.getElementById("btnCancelar");
+        const ayudaPassword = document.getElementById("ayudaPassword");
+
+        let rolesDisponibles = [];
+
+        function mostrarMensaje(elemento, texto, tipo) {
+
+            elemento.textContent = texto;
+
+            elemento.className = "mensaje " +
+                (tipo === "exito"
+                    ? "mensaje-exito"
+                    : "mensaje-error");
+
+            elemento.style.display = "block";
+        }
+
+        function ocultarMensaje(elemento) {
+            elemento.style.display = "none";
+            elemento.textContent = "";
+        }
+
+        async function obtenerRespuesta(respuesta) {
+
+            const texto = await respuesta.text();
+
+            if (!texto) {
+                return null;
+            }
+
+            try {
+                return JSON.parse(texto);
+            } catch {
+                return texto;
+            }
+        }
+
+        function obtenerMensajeError(datos, respuesta) {
+
+            if (datos && typeof datos === "object") {
+
+                return datos.message ||
+                    datos.mensaje ||
+                    datos.error ||
+                    datos.detail ||
+                    `Error ${respuesta.status}: ${respuesta.statusText}`;
+            }
+
+            return typeof datos === "string" && datos.trim()
+                ? datos
+                : `Error ${respuesta.status}: ${respuesta.statusText}`;
+        }
+
+        async function cargarRoles() {
+
+            campoRol.innerHTML = `
+                <option value="">Cargando roles...</option>
+            `;
+
+            try {
+
+                const respuesta = await fetch(API_ROLES);
+                const datos = await obtenerRespuesta(respuesta);
+
+                if (!respuesta.ok) {
+                    throw new Error(
+                        obtenerMensajeError(datos, respuesta)
+                    );
+                }
+
+                if (!Array.isArray(datos)) {
+                    throw new Error("La API no devolvió una lista de roles.");
+                }
+
+                rolesDisponibles = datos;
+
+                campoRol.innerHTML = `
+                    <option value="">Seleccione un rol</option>
+                `;
+
+                rolesDisponibles.forEach(rol => {
+
+                    const id = rol.idRol ?? rol.id_rol;
+                    const opcion = document.createElement("option");
+
+                    opcion.value = id;
+                    opcion.textContent = rol.nombre;
+
+                    campoRol.appendChild(opcion);
+
+                });
+
+                if (rolesDisponibles.length === 0) {
+                    throw new Error("No hay roles activos registrados.");
+                }
+
+            } catch (error) {
+
+                campoRol.innerHTML = `
+                    <option value="">No se pudieron cargar los roles</option>
+                `;
+
+                mostrarMensaje(
+                    mensajeFormulario,
+                    "Error al consultar los roles: " + error.message,
+                    "error"
+                );
+
+            }
+
+        }
+
+        function obtenerNombreRol(idRol) {
+
+            const rol = rolesDisponibles.find(r =>
+                Number(r.idRol ?? r.id_rol) === Number(idRol)
+            );
+
+            return rol ? rol.nombre : "Sin rol";
+
+        }
+
+        async function cargarUsuarios() {
+
+            tabla.innerHTML = `
+                <tr>
+                    <td colspan="7" class="estado-carga">
+                        Cargando usuarios...
+                    </td>
+                </tr>
+            `;
+
+            try {
+
+                const respuesta = await fetch(API_USUARIOS);
+                const datos = await obtenerRespuesta(respuesta);
+
+                if (!respuesta.ok) {
+                    throw new Error(
+                        obtenerMensajeError(datos, respuesta)
+                    );
+                }
+
+                if (!Array.isArray(datos)) {
+                    throw new Error("La API no devolvió una lista de usuarios.");
+                }
+
+                tabla.innerHTML = "";
+
+                if (datos.length === 0) {
+
+                    tabla.innerHTML = `
+                        <tr>
+                            <td colspan="7">
+                                No hay usuarios activos registrados.
+                            </td>
+                        </tr>
+                    `;
+
+                    return;
+                }
+
+                datos.forEach(usuario => {
+
+                    const fila = document.createElement("tr");
+
+                    const id = usuario.idUsuario ?? usuario.id_usuario;
+                    const idRol = usuario.idRol ?? usuario.id_rol;
+
+                    const valores = [
+                        id,
+                        usuario.nombres ?? "",
+                        usuario.apellidos ?? "",
+                        usuario.correo ?? "",
+                        usuario.telefono ?? "",
+                        obtenerNombreRol(idRol)
+                    ];
+
+                    valores.forEach(valor => {
+
+                        const celda = document.createElement("td");
+                        celda.textContent = valor;
+                        fila.appendChild(celda);
+
+                    });
+
+                    const celdaAcciones = document.createElement("td");
+
+                    const botonEditar = document.createElement("button");
+                    botonEditar.textContent = "Editar";
+                    botonEditar.className = "btn btn-editar";
+
+                    botonEditar.addEventListener("click", () => {
+                        editarUsuario(usuario);
+                    });
+
+                    const botonDesactivar = document.createElement("button");
+                    botonDesactivar.textContent = "Desactivar";
+                    botonDesactivar.className = "btn btn-eliminar";
+
+                    botonDesactivar.addEventListener("click", () => {
+                        desactivarUsuario(id);
+                    });
+
+                    celdaAcciones.appendChild(botonEditar);
+                    celdaAcciones.appendChild(botonDesactivar);
+
+                    fila.appendChild(celdaAcciones);
+
+                    tabla.appendChild(fila);
+
+                });
+
+            } catch (error) {
+
+                tabla.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            No fue posible cargar los usuarios.
+                        </td>
+                    </tr>
+                `;
+
+                mostrarMensaje(
+                    mensajeTabla,
+                    error.message,
+                    "error"
+                );
+
+            }
+
+        }
+
+        formulario.addEventListener("submit", async function(evento) {
+
+            evento.preventDefault();
+
+            ocultarMensaje(mensajeFormulario);
+
+            const id = campoId.value;
+            const password = campoPassword.value;
+
+            if (!id && !password.trim()) {
+
+                mostrarMensaje(
+                    mensajeFormulario,
+                    "La contraseña es obligatoria para registrar un usuario.",
+                    "error"
+                );
+
+                return;
+            }
+
+            if (password && password.length < 6) {
+
+                mostrarMensaje(
+                    mensajeFormulario,
+                    "La contraseña debe tener al menos 6 caracteres.",
+                    "error"
+                );
+
+                return;
+            }
+
+            const usuario = {
+
+                nombres: campoNombres.value.trim(),
+                apellidos: campoApellidos.value.trim(),
+                correo: campoCorreo.value.trim(),
+                telefono: campoTelefono.value.trim(),
+                direccion: campoDireccion.value.trim(),
+                idRol: Number(campoRol.value)
+
+            };
+
+            if (password) {
+                usuario.password = password;
+            }
+
+            if (!usuario.idRol) {
+
+                mostrarMensaje(
+                    mensajeFormulario,
+                    "Debes seleccionar un rol.",
+                    "error"
+                );
+
+                return;
+            }
+
+            const metodo = id ? "PUT" : "POST";
+
+            const url = id
+                ? `${API_USUARIOS}/${id}`
+                : API_USUARIOS;
+
+            btnGuardar.disabled = true;
+            btnGuardar.textContent = "Guardando...";
+
+            try {
+
+                const respuesta = await fetch(url, {
+
+                    method: metodo,
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(usuario)
+
+                });
+
+                const datos = await obtenerRespuesta(respuesta);
+
+                if (!respuesta.ok) {
+                    throw new Error(
+                        obtenerMensajeError(datos, respuesta)
+                    );
+                }
+
+                mostrarMensaje(
+                    mensajeFormulario,
+                    id
+                        ? "Usuario actualizado correctamente."
+                        : "Usuario registrado correctamente.",
+                    "exito"
+                );
+
+                limpiarFormulario();
+
+                await cargarUsuarios();
+
+            } catch (error) {
+
+                mostrarMensaje(
+                    mensajeFormulario,
+                    error.message,
+                    "error"
+                );
+
+            } finally {
+
+                btnGuardar.disabled = false;
+
+                btnGuardar.textContent = campoId.value
+                    ? "Actualizar usuario"
+                    : "Registrar usuario";
+
+            }
+
+        });
+
+        function editarUsuario(usuario) {
+
+            campoId.value =
+                usuario.idUsuario ?? usuario.id_usuario;
+
+            campoNombres.value = usuario.nombres ?? "";
+            campoApellidos.value = usuario.apellidos ?? "";
+            campoCorreo.value = usuario.correo ?? "";
+            campoTelefono.value = usuario.telefono ?? "";
+            campoDireccion.value = usuario.direccion ?? "";
+
+            campoRol.value =
+                usuario.idRol ?? usuario.id_rol ?? "";
+
+            campoPassword.value = "";
+            campoPassword.required = false;
+
+            ayudaPassword.textContent =
+                "Deja este campo vacío para conservar la contraseña actual.";
+
+            tituloFormulario.textContent = "Editar usuario";
+            btnGuardar.textContent = "Actualizar usuario";
+            btnCancelar.style.display = "inline-block";
+
+            ocultarMensaje(mensajeFormulario);
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+
+        function limpiarFormulario() {
+
+            formulario.reset();
+
+            campoId.value = "";
+            campoPassword.required = true;
+
+            tituloFormulario.textContent = "Registrar usuario";
+            btnGuardar.textContent = "Registrar usuario";
+
+            btnCancelar.style.display = "none";
+
+            ayudaPassword.textContent =
+                "Obligatoria para registrar un usuario.";
+
+            ocultarMensaje(mensajeFormulario);
+
+        }
+
+        async function desactivarUsuario(id) {
+
+            const confirmar = confirm(
+                "¿Estás seguro de que deseas desactivar este usuario?"
+            );
+
+            if (!confirmar) {
+                return;
+            }
+
+            ocultarMensaje(mensajeTabla);
+
+            try {
+
+                const respuesta = await fetch(
+                    `${API_USUARIOS}/${id}`,
+                    {
+                        method: "DELETE"
+                    }
+                );
+
+                const datos = await obtenerRespuesta(respuesta);
+
+                if (!respuesta.ok) {
+                    throw new Error(
+                        obtenerMensajeError(datos, respuesta)
+                    );
+                }
+
+                mostrarMensaje(
+                    mensajeTabla,
+                    "Usuario desactivado correctamente.",
+                    "exito"
+                );
+
+                await cargarUsuarios();
+
+            } catch (error) {
+
+                mostrarMensaje(
+                    mensajeTabla,
+                    error.message,
+                    "error"
+                );
+
+            }
+
+        }
+
+        async function iniciarModulo() {
+
+            await cargarRoles();
+            await cargarUsuarios();
+
+        }
+
+        iniciarModulo();
+
+    </script>
+
+</body>
+</html>

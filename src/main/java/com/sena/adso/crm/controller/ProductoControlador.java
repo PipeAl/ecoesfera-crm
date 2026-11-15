@@ -1,76 +1,78 @@
+
 package com.sena.adso.crm.controller;
 
 import com.sena.adso.crm.entidades.Producto;
 import com.sena.adso.crm.servicio.ProductoServicio;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController 
+@RestController
 @RequestMapping("/api/productos")
 @CrossOrigin(origins = "*")
 public class ProductoControlador {
 
     private final ProductoServicio productoServicio;
 
-    public ProductoControlador(ProductoServicio productoServicio){
+    public ProductoControlador(ProductoServicio productoServicio) {
         this.productoServicio = productoServicio;
     }
 
-@GetMapping
-public List<Producto> listarPorductos() {
-    return productoServicio.listarProductos();
-}
-
-@GetMapping("/{id}")
-public ResponseEntity<Producto> buscarProducto(@PathVariable Integer id) {
-    Producto producto = productoServicio.buscarProducto(id);
-
-    if (producto == null) {
-        return ResponseEntity.notFound().build();
+    // Listar todos los productos activos
+    @GetMapping
+    public List<Producto> listarProductos() {
+        return productoServicio.listarProductos();
     }
 
-    return ResponseEntity.ok(producto);
-}
+    // Buscar un producto por su ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Producto> buscarProducto(@PathVariable Integer id) {
+        Producto producto = productoServicio.buscarProducto(id);
 
-@PostMapping 
-public ResponseEntity<Producto> crearProducto(@RequestBody Producto producto) {
-    producto.setIdProducto(null);
+        if (producto == null) {
+            return ResponseEntity.notFound().build();
+        }
 
-    Producto guardado = productoServicio.guardarProducto(producto);
-
-    return ResponseEntity.status(HttpStatus.CREATED).body(guardado);
-}
-
-@PutMapping("/{id}")
-public ResponseEntity<Producto> actualizarProducto(
-    @PathVariable Integer id,
-    @RequestBody Producto datos) {
-
-    Producto productoExistente = productoServicio.buscarProducto(id);
-   if (productoExistente == null) {
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(producto);
     }
 
-    datos.setIdProducto(id);
+    // Registrar un nuevo producto
+    @PostMapping
+    public ResponseEntity<Producto> crearProducto(@RequestBody Producto producto) {
+        producto.setIdProducto(null);
 
-    return ResponseEntity.ok(productoServicio.guardarProducto(datos));
+        Producto guardado = productoServicio.guardarProducto(producto);
 
-}
-@DeleteMapping("/{id}")
-public ResponseEntity<Void> eliminarProducto(@PathVariable Integer id) {
-    if (productoServicio.buscarProducto(id) == null) {
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(guardado);
     }
 
-    productoServicio.eliminarProducto(id);
-    
-    return ResponseEntity.noContent().build();
+    // Actualizar un producto existente
+    @PutMapping("/{id}")
+    public ResponseEntity<Producto> actualizarProducto(
+            @PathVariable Integer id,
+            @RequestBody Producto datos) {
+
+        Producto actualizado = productoServicio.actualizarProducto(id, datos);
+
+        if (actualizado == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(actualizado);
+    }
+
+    // Realizar eliminación lógica de un producto
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarProducto(@PathVariable Integer id) {
+        if (productoServicio.buscarProducto(id) == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        productoServicio.eliminarProducto(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }
-}
-
-
-
-

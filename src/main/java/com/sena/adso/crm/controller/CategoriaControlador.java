@@ -46,22 +46,18 @@ public class CategoriaControlador {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Categoria> actualizarCategoria(
-            @PathVariable Integer id,
-            @RequestBody Categoria categoria) {
+public ResponseEntity<Categoria> actualizarCategoria(
+        @PathVariable Integer id, @RequestBody Categoria categoria) {
 
-        Categoria categoriaExistente = categoriaServicio.buscarCategoria(id);
+    Categoria categoriaActualizada =
+            categoriaServicio.actualizarCategoria(id, categoria);
 
-        if (categoriaExistente == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        categoria.setIdCategoria(id);
-
-        Categoria categoriaActualizada = categoriaServicio.guardarCategoria(categoria);
-
-        return ResponseEntity.ok(categoriaActualizada);
+    if (categoriaActualizada == null) {
+        return ResponseEntity.notFound().build();
     }
+
+    return ResponseEntity.ok(categoriaActualizada);
+}
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarCategoria(@PathVariable Integer id) {

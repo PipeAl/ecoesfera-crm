@@ -1,3 +1,4 @@
+
 package com.sena.adso.crm.entidades;
 
 import jakarta.persistence.*;
@@ -18,9 +19,9 @@ public class Producto {
     @Column(name = "descripcion")
     private String descripcion;
 
-    @Column (name = "imagen", length = 255)
+    @Column(name = "imagen", length = 255)
     private String imagen;
-    
+
     @Column(name = "precio_venta", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioVenta;
 
@@ -40,7 +41,6 @@ public class Producto {
     private Integer idProveedor;
 
     public Producto() {
-
     }
 
     public Integer getIdProducto() {
@@ -56,7 +56,7 @@ public class Producto {
     }
 
     public void setNombre(String nombre) {
-        this. nombre = nombre;
+        this.nombre = nombre;
     }
 
     public String getDescripcion() {
@@ -94,7 +94,7 @@ public class Producto {
     public Integer getStockMinimo() {
         return stockMinimo;
     }
-    
+
     public void setStockMinimo(Integer stockMinimo) {
         this.stockMinimo = stockMinimo;
     }
@@ -122,5 +122,4 @@ public class Producto {
     public void setIdProveedor(Integer idProveedor) {
         this.idProveedor = idProveedor;
     }
-
 }
